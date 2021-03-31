@@ -3,32 +3,44 @@ const app = express();
 
 const arrAuthorsBooks = [
   {
-    author: 'Laurence Nowell, UK',
+    name: 'Laurence Nowell',
+    nationality: 'UK',
     books: 'Beowulf',
   },
 
   {
-    author: 'William Shakespeare, UK',
+    name: 'William Shakespeare',
+    nationality: 'UK',
     books: 'Hamlet, Othello, Romeo and Juliet, MacBeth',
   },
   {
-    author: 'Charles Dickens, UK',
+    name: 'Charles Dickens',
+    nationality: 'UK',
     books: 'Oliver Twist, A Christmas Carol',
   },
   {
-    author: 'Oscard Wilde, UK',
+    name: 'Oscard Wilde',
+    nationality: 'UK',
     books: 'The Picture of Dorian Gray, The Importance of Being Earnest',
   },
 ];
 
 app.get('/authors/:id', function (req, res) {
   let infoAuthors = arrAuthorsBooks[req.params.id - 1];
-  res.json(infoAuthors);
+
+  res.json({
+    name: infoAuthors.name,
+    nationality: infoAuthors.nationality,
+  });
 });
 
-app.get('/authors/:id/books/:books', (req, res) => {
-  let books = arrAuthorsBooks[req.params.id - 1].books;
-  res.json(books);
+app.get('/authors/:id/books', (req, res) => {
+  let books = [];
+  books.push(arrAuthorsBooks[req.params.id - 1].books);
+
+  res.json({
+    books: books,
+  });
 });
 
 const port = 8000;
