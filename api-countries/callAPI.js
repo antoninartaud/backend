@@ -1,8 +1,8 @@
 const request = require('request');
 
-request.get('http://localhost:8000/countries', function (err, res, body) {
-  // console.log(typeof body);
-  let listOfCountries = JSON.parse(body);
+request.get('http://localhost:8000/countries', function (err, res, data) {
+  // console.log(data);
+  let listOfCountries = JSON.parse(data);
   console.log(listOfCountries);
   let reverseList = listOfCountries.reverse();
 

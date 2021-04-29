@@ -6,7 +6,9 @@ const app = express();
 app.use(cors());
 
 app.get('/countries', function (req, res) {
-  res.send(['espagne', 'sénégal', 'colombie', 'vietnam', 'cambodge']);
+  var listCountries = ['espagne', 'sénégal', 'colombie', 'vietnam', 'cambodge'];
+
+  res.json(listCountries);
 });
 
 let port = 8000;
