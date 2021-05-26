@@ -5,21 +5,36 @@ const app = express();
 
 app.use(cors());
 
-const students = ['prince', 'michael', 'terence'];
+app.use(express.json());
+
+const students = [
+  {
+    name: 'Mickael',
+  },
+  {
+    name: 'Jeff',
+  },
+  {
+    name: 'Melinda',
+  },
+];
 
 app.get('/students', function (req, res) {
   res.json(students);
 });
 
 app.post('/students/add', function (req, res) {
+  // console.log('req.params', req);
+
+  console.log(req.body);
+
   const newStudent = req.body;
   students.push(newStudent);
 
   res.json({
     message: 'good morning Mr Student',
+    students,
   });
-
-  console.log('req.params', req.params.name);
 });
 
 const port = 8000;
