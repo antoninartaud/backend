@@ -43,6 +43,25 @@ const debug = (req, res, next) => {
 app.use(cors());
 app.use(express.json());
 
+app.get('/heroes', (req, res) => {
+  res.json(superHeros);
+});
+
+app.get('/heroes/:name', (req, res) => {
+  // console.log('req.params.name:', req.params.name);
+  const paramName = req.params.name;
+  const herosName = superHeros.map((elem) => {
+    return elem.paramName;
+  });
+  res.json(herosName);
+});
+
+app.get('*', (req, res) => {
+  res.json({
+    errorMessage: 'Ground Control ????',
+  });
+});
+
 app.listen(port, function () {
   console.log('what about 42 ???');
 });
