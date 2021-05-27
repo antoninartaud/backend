@@ -1,43 +1,39 @@
 const express = require('express');
 const cors = require('cors');
 
+const port = 8000;
+
 const app = express();
 
 app.use(cors());
-
 app.use(express.json());
 
-const students = [
-  {
-    name: 'Mickael',
-  },
-  {
-    name: 'Jeff',
-  },
-  {
-    name: 'Melinda',
-  },
-];
+const students = [];
 
-app.get('/students', function (req, res) {
-  res.json(students);
+app.get('/students', (req, res) => {
+  res.json(
+    // message: 'once upon a time',
+    students
+  );
 });
 
-app.post('/students/add', function (req, res) {
-  // console.log('req.params', req);
-
-  console.log(req.body);
-
+app.post('/students', (req, res) => {
   const newStudent = req.body;
+
   students.push(newStudent);
 
   res.json({
-    message: 'good morning Mr Student',
-    students,
+    message: 'post students ok',
+    newStudent,
   });
 });
 
-const port = 8000;
-app.listen(port, function () {
-  console.log('What about 42 ???');
+app.get('*', (req, res) => {
+  res.json({
+    message: "The route doesn't exist",
+  });
+});
+
+app.listen(port, () => {
+  console.log(`J'écoute des requêtes sur le port ${port}`);
 });
