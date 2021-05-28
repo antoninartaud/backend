@@ -71,6 +71,10 @@ app.get('*', (req, res) => {
   });
 });
 
+app.post('/heroes', (req, res) => {
+  res.json({ message: 'my hero....' });
+});
+
 app.listen(port, function () {
   console.log('what about 42 ???');
 });
