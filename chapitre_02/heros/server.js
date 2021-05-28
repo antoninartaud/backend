@@ -5,7 +5,7 @@ const port = 8000;
 
 const app = express();
 
-const superHeros = [
+const superHerosList = [
   {
     name: 'Iron Man',
     power: ['money'],
@@ -44,21 +44,21 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/heroes', (req, res) => {
-  res.json(superHeros);
+  res.json(superHerosList);
 });
 
 app.get('/heroes/:name', (req, res) => {
   // console.log('req.params.name:', req.params.name);
-  const paramName = req.params.name;
-  const herosName = superHeros.map((elem) => {
-    return elem.paramName;
-  });
+  // const paramName = req.params.name;
+  const herosName = superHerosList.filter(
+    (elem) => req.params.name === elem.name
+  );
   res.json(herosName);
 });
 
 app.get('*', (req, res) => {
   res.json({
-    errorMessage: 'Ground Control ????',
+    errorMessage: 'Ground Control to Major Tom ????',
   });
 });
 
