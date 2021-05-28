@@ -74,15 +74,24 @@ app.get('/heroes/:name/powers', (req, res) => {
   res.json(selectedHero.power);
 });
 
+app.get('*', (req, res) => {
+  res.json({
+    errorMessage: 'Ground Control to Major Tom ????',
+  });
+});
+
 app.post('/heroes', transformName, (req, res) => {
   console.log(req.body.name);
   res.json({ message: 'my hero....' });
 });
 
-app.get('*', (req, res) => {
-  res.json({
-    errorMessage: 'Ground Control to Major Tom ????',
-  });
+app.post('/heroes/:name/powers/:power', (req, res) => {
+  // res.json({ message: 'who am I ?' });
+  const selectedHero = superHerosList.find(
+    (elem) => req.params.name === elem.name
+  );
+  selectedHero.power.push(req.params.power);
+  res.json(selectedHero.power);
 });
 
 app.listen(port, function () {
