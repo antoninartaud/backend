@@ -49,11 +49,7 @@ app.get('/heroes', (req, res) => {
 
 app.get('/heroes/:name', (req, res) => {
   // console.log('req.params.name:', req.params.name);
-  // const paramName = req.params.name;
 
-  // const selectedHero = superHerosList.filter(
-  //   (elem) => req.params.name === elem.name
-  // );
   const selectedHero = superHerosList.find(
     (elem) => req.params.name === elem.name
   );
@@ -63,10 +59,10 @@ app.get('/heroes/:name', (req, res) => {
 app.get('/heroes/:name/powers', (req, res) => {
   // res.json({ message: 'who am I ?' });
 
-  const selectedHero = superHerosList.filter(
+  const selectedHero = superHerosList.find(
     (elem) => req.params.name === elem.name
   );
-  res.json(selectedHero);
+  res.json(selectedHero.power);
 });
 
 app.get('*', (req, res) => {
