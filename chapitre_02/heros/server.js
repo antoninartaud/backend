@@ -40,6 +40,15 @@ const debug = (req, res, next) => {
   next();
 };
 
+const transformName = (req, res, next) => {
+  req.body.name = req.body.name.toLowerCase();
+  next();
+};
+// {
+//   const heroNameLowerCase = req.body.name.toLowerCase();
+//   console.log(heroNameLowerCase);
+// };
+
 app.use(cors());
 app.use(express.json());
 
@@ -65,14 +74,15 @@ app.get('/heroes/:name/powers', (req, res) => {
   res.json(selectedHero.power);
 });
 
+app.post('/heroes', transformName, (req, res) => {
+  console.log(req.body.name);
+  res.json({ message: 'my hero....' });
+});
+
 app.get('*', (req, res) => {
   res.json({
     errorMessage: 'Ground Control to Major Tom ????',
   });
-});
-
-app.post('/heroes', (req, res) => {
-  res.json({ message: 'my hero....' });
 });
 
 app.listen(port, function () {
