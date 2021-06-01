@@ -106,15 +106,17 @@ app.post('/heroes/:name/powers', (req, res) => {
 
 const isHeroExist = (req, res, next) => {
   const hero = req.params.name.toLowerCase();
-  console.log('🚀 ~ file: server.mjs ~ line 109 ~ isHeroExist ~ hero', hero);
+  // console.log('🚀 ~ file: server.mjs ~ line 109 ~ isHeroExist ~ hero', hero);
 
-  const newHero = superHeros.find((elem) => elem.name.toLowerCase() === hero);
-  console.log(
-    '🚀 ~ file: server.mjs ~ line 112 ~ isHeroExist ~ newHero',
-    newHero
+  const selectedHero = superHeros.find(
+    (elem) => elem.name.toLowerCase() === hero
   );
+  // console.log(
+  //   '🚀 ~ file: server.mjs ~ line 112 ~ isHeroExist ~ selectedHero',
+  //   selectedHero
+  // );
 
-  if (newHero) {
+  if (selectedHero) {
     next();
   } else {
     res.json("This dude didn't leave in my app !");
@@ -122,7 +124,21 @@ const isHeroExist = (req, res, next) => {
 };
 
 app.delete('/heroes/:name', isHeroExist, (req, res) => {
-  res.json(superHeros);
+  const selectedHero = req.params.name.toLowerCase();
+  // console.log(
+  //   '🚀 ~ file: server.mjs ~ line 126 ~ app.delete ~ selectedHero',
+  //   selectedHero
+  // );
+
+  for (let i = 0; i < superHeros.length; i++) {
+    if (superHeros[i].name.toLowerCase() === selectedHero) {
+      superHeros.splice(i, 1);
+    }
+  }
+  res.json({
+    message: `Mister or Misses : ${selectedHero} he/she's not part of our team anymore !`,
+    superHeros,
+  });
 });
 
 app.listen(port, () => {
