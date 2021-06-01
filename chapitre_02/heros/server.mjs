@@ -104,6 +104,27 @@ app.post('/heroes/:name/powers', (req, res) => {
   }
 });
 
+const isHeroExist = (req, res, next) => {
+  const hero = req.params.name.toLowerCase();
+  console.log('🚀 ~ file: server.mjs ~ line 109 ~ isHeroExist ~ hero', hero);
+
+  const newHero = superHeros.find((elem) => elem.name.toLowerCase() === hero);
+  console.log(
+    '🚀 ~ file: server.mjs ~ line 112 ~ isHeroExist ~ newHero',
+    newHero
+  );
+
+  if (newHero) {
+    next();
+  } else {
+    res.json("This dude didn't leave in my app !");
+  }
+};
+
+app.delete('/heroes/:name', isHeroExist, (req, res) => {
+  res.json(superHeros);
+});
+
 app.listen(port, () => {
   console.log('What about 42 ???', port);
 });
