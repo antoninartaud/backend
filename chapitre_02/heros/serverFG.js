@@ -41,6 +41,18 @@ const debug = (req, res, next) => {
 };
 
 const transformName = (req, res, next) => {
+  console.log('req.body.name dans transform:', req.body.name);
+
+  if (req.body.name === undefined) {
+    res.json({
+      errorMessage: 'Hummm...please a name!..',
+    });
+  } else {
+    req.body.name = req.body.name.toLowerCase();
+
+    next();
+  }
+
   req.body.name = req.body.name.toLowerCase();
   next();
 };
@@ -51,6 +63,7 @@ const transformName = (req, res, next) => {
 
 app.use(cors());
 app.use(express.json());
+app.use(debug());
 
 app.get('/heroes', (req, res) => {
   res.json(superHerosList);
@@ -60,7 +73,7 @@ app.get('/heroes/:name', (req, res) => {
   // console.log('req.params.name:', req.params.name);
 
   const selectedHero = superHerosList.find(
-    (elem) => req.params.name === elem.name
+    (elem) => req.params.name.toLowerCase === elem.name
   );
   res.json(selectedHero);
 });
@@ -69,8 +82,9 @@ app.get('/heroes/:name/powers', (req, res) => {
   // res.json({ message: 'who am I ?' });
 
   const selectedHero = superHerosList.find(
-    (elem) => req.params.name === elem.name
+    (elem) => req.params.name.toLowerCase === elem.name.toLowerCase
   );
+
   res.json(selectedHero.power);
 });
 
@@ -81,17 +95,39 @@ app.get('*', (req, res) => {
 });
 
 app.post('/heroes', transformName, (req, res) => {
-  console.log(req.body.name);
-  res.json({ message: 'my hero....' });
+  // console.log(req.body);
+
+  const hero = req.body;
+
+  superHerosList.push(hero);
+
+  res.json({
+    message: 'my hero....',
+    hero,
+  });
 });
 
-app.post('/heroes/:name/powers/:power', (req, res) => {
+app.post('/heroes/:name/powers', (req, res) => {
   // res.json({ message: 'who am I ?' });
+  const nameHero = req.params.name.toLowerCase();
+
   const selectedHero = superHerosList.find(
-    (elem) => req.params.name === elem.name
+    (elem) => nameHero === elem.name.toLowerCase
   );
-  selectedHero.power.push(req.params.power);
-  res.json(selectedHero.power);
+
+  if (selectedHero) {
+    const heroPower = req.body.power;
+
+    selectedHero.powers.push(heroPower);
+
+    res.json({
+      message: `Power added! The powers of ${nameHero} are ${selectedHero.powers}`,
+    });
+  } else {
+    res.json({
+      errorMessage: 'Hero not found',
+    });
+  }
 });
 
 app.listen(port, function () {
