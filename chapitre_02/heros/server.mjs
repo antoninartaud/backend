@@ -62,16 +62,24 @@ const transformName = (req, res, next) => {
 };
 
 app.post('/heroes', transformName, (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
 
   const hero = req.body;
 
-  superHeros.push(hero);
+  const newHero = superHeros.find((elem) => elem.name === hero.name);
 
-  res.json({
-    message: 'Ok, héros ajouté',
-    hero,
-  });
+  if (newHero) {
+    res.json({
+      message: `no, thanks i already got this one: ${newHero.name}`,
+    });
+  } else {
+    superHeros.push(hero);
+
+    res.json({
+      message: 'Ok, héros ajouté',
+      hero,
+    });
+  }
 });
 
 app.post('/heroes/:name/powers', (req, res) => {
@@ -97,5 +105,5 @@ app.post('/heroes/:name/powers', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log('Server is listenin at port ', port);
+  console.log('What about 42 ???', port);
 });
