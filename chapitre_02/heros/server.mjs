@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { superHeros } from './dataHeroes.mjs';
+import { superHeros } from './dataHeros.mjs';
 
 const port = 8000;
 
@@ -61,18 +61,31 @@ const transformName = (req, res, next) => {
   }
 };
 
-app.post('/heroes', transformName, (req, res) => {
-  console.log(req.body);
+app.post(
+  '/heroes',
+  (req, res, next) => {
+    const hero = req.body;
 
-  const hero = req.body;
-
-  const newHero = superHeros.find((elem) => elem.name === hero.name);
-
-  if (newHero) {
-    res.json({
-      message: `no, thanks i already got this one: ${newHero.name}`,
+    const selectedHero = superHeros.find((elem) => {
+      return elem.name.toLowerCase() === hero.name.toLowerCase();
     });
-  } else {
+
+    console.log('selectedHero', selectedHero);
+
+    if (selectedHero) {
+      res.json({
+        errorMessage: 'The hero already exists',
+      });
+    } else {
+      next();
+    }
+  },
+  transformName,
+  (req, res) => {
+    // console.log(req.body);
+
+    const hero = req.body;
+
     superHeros.push(hero);
 
     res.json({
@@ -80,7 +93,7 @@ app.post('/heroes', transformName, (req, res) => {
       hero,
     });
   }
-});
+);
 
 app.post('/heroes/:name/powers', (req, res) => {
   const nameHero = req.params.name.toLowerCase();
@@ -104,43 +117,82 @@ app.post('/heroes/:name/powers', (req, res) => {
   }
 });
 
-const isHeroExist = (req, res, next) => {
-  const hero = req.params.name.toLowerCase();
-  // console.log('🚀 ~ file: server.mjs ~ line 109 ~ isHeroExist ~ hero', hero);
+const continueIfHeroExists = (req, res, next) => {
+  const heroName = req.params.name.toLowerCase();
 
-  const selectedHero = superHeros.find(
-    (elem) => elem.name.toLowerCase() === hero
-  );
-  // console.log(
-  //   '🚀 ~ file: server.mjs ~ line 112 ~ isHeroExist ~ selectedHero',
-  //   selectedHero
-  // );
+  const selectedHero = superHeros.find((elem) => {
+    return elem.name.toLowerCase() === heroName;
+  });
 
   if (selectedHero) {
     next();
   } else {
-    res.json("This dude didn't leave in my app !");
+    res.json({
+      errorMessage: "The hero doesn't exists",
+    });
   }
 };
 
-app.delete('/heroes/:name', isHeroExist, (req, res) => {
-  const selectedHero = req.params.name.toLowerCase();
-  // console.log(
-  //   '🚀 ~ file: server.mjs ~ line 126 ~ app.delete ~ selectedHero',
-  //   selectedHero
-  // );
+app.delete('/heroes/:name', continueIfHeroExists, (req, res) => {
+  const heroName = req.params.name.toLowerCase();
 
-  for (let i = 0; i < superHeros.length; i++) {
-    if (superHeros[i].name.toLowerCase() === selectedHero) {
+  // superHeros = superHeros.filter(elem => {
+  //     return elem.name.toLowerCase() !== heroName
+  // })
+
+  for (var i = 0; i < superHeros.length; i++) {
+    if (superHeros[i].name.toLowerCase() === heroName) {
       superHeros.splice(i, 1);
     }
   }
+
   res.json({
-    message: `Mister or Misses : ${selectedHero} he/she's not part of our team anymore !`,
-    superHeros,
+    message: `${heroName} effacé correctement`,
+  });
+});
+
+app.delete('/heroes/:name/power/:power', continueIfHeroExists, (req, res) => {
+  const heroName = req.params.name.toLowerCase();
+  const heroPower = req.params.power.toLowerCase();
+
+  const selectedHero = superHeros.find((elem) => {
+    return elem.name.toLowerCase() === heroName;
+  });
+
+  const indexPower = selectedHero.powers.findIndex((elem) => {
+    return elem === heroPower;
+  });
+
+  if (indexPower > -1) {
+    selectedHero.powers.splice(indexPower, 1);
+
+    res.json({
+      message: `Le pouvoir ${heroPower} de ${heroName} a été effacé correctement`,
+    });
+  } else {
+    res.json({
+      message: `Le pouvoir ${heroPower} n'existe pas dans l'héro ${heroName}`,
+    });
+  }
+});
+
+app.put('/heroes/:name', continueIfHeroExists, (req, res) => {
+  const heroName = req.params.name.toLowerCase();
+  const newHero = req.body;
+
+  const heroId = superHeros.findIndex((elem) => {
+    return elem.name.toLowerCase() === heroName;
+  });
+
+  superHeros[heroId] = newHero;
+
+  // superHeros.splice(heroId, 1, newHero) // Same as above
+
+  res.json({
+    message: `${heroName} a été remplace correctement`,
   });
 });
 
 app.listen(port, () => {
-  console.log('What about 42 ???', port);
+  console.log('Server is listenin at port ', port);
 });
