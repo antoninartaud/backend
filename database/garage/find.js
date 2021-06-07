@@ -17,22 +17,12 @@ const carsSchema = new mongoose.Schema({
 
 const Car = mongoose.model('Car', carsSchema);
 
-// const car = new Car({
-//   brand: 'Renault',
-//   model: 'Espace',
-//   year: 1999,
-// });
+const id = '60be1954a202993b03168be1';
 
-// const car = new Car({
-//   brand: 'Renault',
-//   model: 'Scenic',
-//   year: 2004,
-// });
-
-// const car = new Car({
-//   brand: 'Peugeot',
-//   model: '308',
-//   year: 2017,
-// });
-
-// car.save();
+Car.findById(id, function (err, docs) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('Result : ', docs);
+  }
+});
