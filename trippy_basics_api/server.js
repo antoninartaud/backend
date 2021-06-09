@@ -1,5 +1,16 @@
 const express = require('express');
 const cors = require('cors');
+const mongoose = require('mongoose');
+const Restaurant = require('./model/restaurant');
+const Hotel = require('./model/hotel');
+
+mongoose.connect('mongodb://localhost:27017/trippy_basics', (err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("i'm in the database house!!");
+  }
+});
 
 const port = 8000;
 
