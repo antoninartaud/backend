@@ -35,49 +35,60 @@ app.get('/heroes', async (req, res) => {
   } catch (err) {
     console.error(err);
 
-    res.json({ errorMessage: 'There was a probleme :(' }, 500);
+    res.status(500).json({ errorMessage: 'There was a problem :(' });
   }
 });
 
-app.get('/heroes/:name', (req, res) => {
-  const nameHero = req.params.name; //.toLowerCase();
-  let selectedHero = {};
+const findHero = async (name) => {
+  try {
+    return await Hero.findOne({
+      name: {
+        $regex: new RegExp('^' + name, 'i'),
+      },
+    });
+  } catch (err) {
+    console.error(err);
 
-  // for (var i = 0; i < superHeros.length; i++) {
-  //   if (superHeros[i].name.toLowerCase() === nameHero) {
-  //     selectedHero = superHeros[i];
-  //   }
-  // }
+    return null;
+  }
+};
 
-  const findHero = async () => {
-    try {
-      selectedHero = await Hero.findOne({ name: nameHero });
+app.get('/heroes/:name', async (req, res) => {
+  try {
+    const nameHero = req.params.name;
+    const hero = await findHero(nameHero);
 
-      console.log('findHero', selectedHero);
-      // res.json(hero);
-      if (Object.keys(selectedHero).length !== 0) {
-        res.json(selectedHero);
-      } else {
-        res.json({
-          message: 'Hero not found',
-        });
-      }
-    } catch (err) {
-      console.error(err);
+    if (hero) {
+      res.json({ hero });
+    } else {
+      res.json({
+        message: 'Hero not found',
+      });
     }
-  };
+  } catch (err) {
+    console.error(err);
 
-  findHero();
+    res.status(500).json({ errorMessage: 'There was a problem :(' });
+  }
 });
 
-app.get('/heroes/:name/powers', (req, res) => {
-  const nameHero = req.params.name.toLowerCase();
+app.get('/heroes/:name/powers', async (req, res) => {
+  try {
+    const nameHero = req.params.name;
+    const hero = await findHero(nameHero);
 
-  const selectedHero = superHeros.find((elem) => {
-    return nameHero === elem.name.toLowerCase();
-  });
+    if (hero) {
+      res.json({ powers: hero.powers });
+    } else {
+      res.json({
+        message: 'Hero not found',
+      });
+    }
+  } catch (err) {
+    console.error(err);
 
-  res.json(selectedHero.powers);
+    res.status(500).json({ errorMessage: 'There was a problem :(' });
+  }
 });
 
 const transformName = (req, res, next) => {
@@ -86,7 +97,7 @@ const transformName = (req, res, next) => {
       errorMessage: "To add a hero send at least he's name",
     });
   } else {
-    req.body.name = req.body.name.toLowerCase();
+    req.body.name = req.body.name;
 
     next();
   }
@@ -95,131 +106,166 @@ const transformName = (req, res, next) => {
 app.post(
   '/heroes',
   transformName,
-  (req, res, next) => {
-    const hero = req.body;
+  async (req, res, next) => {
+    try {
+      const heroBody = req.body;
+      const hero = await findHero(heroBody.name);
 
-    const selectedHero = superHeros.find((elem) => {
-      return elem.name.toLowerCase() === hero.name;
-    });
+      if (hero) {
+        res.status(400).json({
+          message: 'The hero already exists',
+        });
+      } else {
+        next();
+      }
+    } catch (err) {
+      console.error(err);
 
-    if (selectedHero) {
-      res.json({
-        errorMessage: 'The hero already exists',
-      });
-    } else {
-      next();
+      res.status(500).json({ errorMessage: 'There was a problem :(' });
     }
   },
-  (req, res) => {
-    // console.log(req.body);
+  async (req, res) => {
+    try {
+      const hero = req.body;
 
-    const hero = req.body;
+      const newHero = await Hero.create(hero);
 
-    superHeros.push(hero);
+      res.json({
+        message: 'Ok, hero was created!',
+        newHero,
+      });
+    } catch (err) {
+      console.error(err);
 
-    res.json({
-      message: 'Ok, héros ajouté',
-      hero,
-    });
+      res.status(500).json({ errorMessage: 'There was a problem :(' });
+    }
   }
 );
 
-app.post('/heroes/:name/powers', (req, res) => {
-  const nameHero = req.params.name.toLowerCase();
+app.post('/heroes/:name/powers', async (req, res) => {
+  try {
+    const nameHero = req.params.name;
 
-  const selectedHero = superHeros.find((elem) => {
-    return nameHero === elem.name.toLowerCase();
-  });
+    const hero = await findHero(nameHero);
 
-  if (selectedHero) {
-    const heroPower = req.body.power;
+    if (hero) {
+      const heroPower = req.body.power;
 
-    selectedHero.powers.push(heroPower);
+      hero.powers.push(heroPower);
 
-    res.json({
-      message: `Power added! The powers of ${nameHero} are ${selectedHero.powers}`,
-    });
-  } else {
-    res.json({
-      errorMessage: 'Hero not found',
-    });
+      const heroNewPowers = hero.powers;
+
+      await Hero.updateOne({ name: hero.name }, { powers: heroNewPowers });
+
+      res.json({
+        message: 'Ok, hero power was added!',
+      });
+    } else {
+      res.status(400).json({ errorMessage: 'Hero was not found' });
+    }
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({ errorMessage: 'There was a problem :(' });
   }
 });
 
-const continueIfHeroExists = (req, res, next) => {
-  const heroName = req.params.name.toLowerCase();
+const continueIfHeroExists = async (req, res, next) => {
+  try {
+    const nameHero = req.params.name;
 
-  const selectedHero = superHeros.find((elem) => {
-    return elem.name.toLowerCase() === heroName;
-  });
+    const hero = await findHero(nameHero);
 
-  if (selectedHero) {
-    next();
-  } else {
-    res.json({
-      errorMessage: "The hero doesn't exists",
-    });
+    if (hero) {
+      next();
+    } else {
+      res.status(400).json({ errorMessage: 'Hero was not found' });
+    }
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({ errorMessage: 'There was a problem :(' });
   }
 };
 
-app.delete('/heroes/:name', continueIfHeroExists, (req, res) => {
-  const heroName = req.params.name.toLowerCase();
+app.delete('/heroes/:name', continueIfHeroExists, async (req, res) => {
+  try {
+    const nameHero = req.params.name;
 
-  // superHeros = superHeros.filter(elem => {
-  //     return elem.name.toLowerCase() !== heroName
-  // })
+    await Hero.deleteOne({
+      name: {
+        $regex: new RegExp('^' + nameHero, 'i'),
+      },
+    });
 
-  for (var i = 0; i < superHeros.length; i++) {
-    if (superHeros[i].name.toLowerCase() === heroName) {
-      superHeros.splice(i, 1);
+    res.json({
+      message: `${nameHero} effacé correctement`,
+    });
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({ errorMessage: 'There was a problem :(' });
+  }
+});
+
+app.delete(
+  '/heroes/:name/power/:power',
+  continueIfHeroExists,
+  async (req, res) => {
+    try {
+      const nameHero = req.params.name;
+      const heroPower = req.params.power;
+
+      const hero = await findHero(nameHero);
+
+      const indexPower = hero.powers.findIndex((elem) => {
+        return elem.toLowerCase() === heroPower.toLowerCase();
+      });
+
+      if (indexPower > -1) {
+        await Hero.updateOne(
+          { name: hero.name },
+          { $pull: { powers: heroPower } }
+        );
+
+        res.json({
+          message: `The power ${heroPower} of ${nameHero} was deleted`,
+        });
+      } else {
+        res.status(400).json({
+          message: `The power ${heroPower} doesn't exists for ${nameHero}`,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+
+      res.status(500).json({ errorMessage: 'There was a problem :(' });
     }
   }
+);
 
-  res.json({
-    message: `${heroName} effacé correctement`,
-  });
-});
+app.put('/heroes/:name', continueIfHeroExists, async (req, res) => {
+  try {
+    const nameHero = req.params.name;
+    const newValuesHero = req.body;
 
-app.delete('/heroes/:name/power/:power', continueIfHeroExists, (req, res) => {
-  const heroName = req.params.name.toLowerCase();
-  const heroPower = req.params.power.toLowerCase();
-
-  const selectedHero = superHeros.find((elem) => {
-    return elem.name.toLowerCase() === heroName;
-  });
-
-  const indexPower = selectedHero.powers.findIndex((elem) => {
-    return elem === heroPower;
-  });
-
-  if (indexPower > -1) {
-    selectedHero.powers.splice(indexPower, 1);
+    await Hero.replaceOne(
+      {
+        name: {
+          $regex: new RegExp('^' + nameHero, 'i'),
+        },
+      },
+      newValuesHero
+    );
 
     res.json({
-      message: `Le pouvoir ${heroPower} de ${heroName} a été effacé correctement`,
+      message: `${nameHero} was replaced!`,
     });
-  } else {
-    res.json({
-      message: `Le pouvoir ${heroPower} n'existe pas dans l'héro ${heroName}`,
-    });
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({ errorMessage: 'There was a problem :(' });
   }
-});
-
-app.put('/heroes/:name', continueIfHeroExists, (req, res) => {
-  const heroName = req.params.name.toLowerCase();
-  const newHero = req.body;
-
-  const heroId = superHeros.findIndex((elem) => {
-    return elem.name.toLowerCase() === heroName;
-  });
-
-  superHeros[heroId] = newHero;
-
-  // superHeros.splice(heroId, 1, newHero) // Same as above
-
-  res.json({
-    message: `${heroName} a été remplace correctement`,
-  });
 });
 
 app.get('*', (req, res) => {
