@@ -23,6 +23,12 @@ app.get('/', (req, res) => {
   res.json('You talking to me ?');
 });
 
+app.get('*', (req, res) => {
+  res.status(404).json({
+    errorMessage: 'This is a dead end road my friend !',
+  });
+});
+
 app.listen(port, () => {
   console.log(`Do you listen to me on port: ${port} ?`);
 });
