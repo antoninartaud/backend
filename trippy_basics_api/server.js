@@ -23,6 +23,10 @@ app.get('/', (req, res) => {
   res.json('You talking to me ?');
 });
 
+/*********** 
+CRUD Hotel
+************/
+
 app.get('*', (req, res) => {
   res.status(404).json({
     errorMessage: 'This is a dead end road my friend !',
