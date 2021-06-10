@@ -52,6 +52,30 @@ app.delete('/hotels/:id', (req, res) => {
   res.json('hi from delete hotels');
 });
 
+/*********** 
+ CRUD Restaurant
+ ************/
+
+app.get('/restaurants', (req, res) => {
+  res.json('route get resto');
+});
+
+app.get('/restaurants/:id', (req, res) => {
+  res.json('get resto :id');
+});
+
+app.post('/restaurants', (req, res) => {
+  res.json('post resto');
+});
+
+app.put('/restaurants/:id', (req, res) => {
+  res.json('put resto route');
+});
+
+app.delete('/restaurants/:id', (req, res) => {
+  res.json('delte resto route');
+});
+
 app.get('*', (req, res) => {
   res.status(404).json({
     errorMessage: 'This is a dead end road my friend !',
