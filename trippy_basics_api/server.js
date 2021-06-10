@@ -4,13 +4,17 @@ const mongoose = require('mongoose');
 const Restaurant = require('./model/restaurant');
 const Hotel = require('./model/hotel');
 
-mongoose.connect('mongodb://localhost:27017/trippy_basics', (err) => {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log("i'm in the database house!!");
+mongoose.connect(
+  'mongodb://localhost:27017/trippy_basics',
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  (err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("i'm in the database house!!");
+    }
   }
-});
+);
 
 const port = 8000;
 
@@ -26,6 +30,27 @@ app.get('/', (req, res) => {
 /*********** 
 CRUD Hotel
 ************/
+
+app.get('/hotels', (req, res) => {
+  res.json('hi from hotels route');
+});
+
+app.get('/hotels/:id', (req, res) => {
+  res.json('hi from hotels:id route');
+});
+
+app.post('/hotels', (req, res) => {
+  console.log(req.body);
+});
+
+app.put('/hotels/:id', (req, res) => {
+  console.log(req.query);
+  res.json('hi from put hotels newname ');
+});
+
+app.delete('/hotels/:id', (req, res) => {
+  res.json('hi from delete hotels');
+});
 
 app.get('*', (req, res) => {
   res.status(404).json({
