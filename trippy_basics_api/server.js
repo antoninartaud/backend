@@ -31,8 +31,18 @@ app.get('/', (req, res) => {
 CRUD Hotel
 ************/
 
-app.get('/hotels', (req, res) => {
-  res.json('hi from hotels route');
+app.get('/hotels', async (req, res) => {
+  try {
+    const hotels = await Hotel.find();
+
+    res.json(hotels);
+  } catch {
+    console.log(err);
+
+    res.status(500).json({
+      errorMessage: 'Sorry Try camping my friend...',
+    });
+  }
 });
 
 app.get('/hotels/:id', (req, res) => {
@@ -56,7 +66,17 @@ app.delete('/hotels/:id', (req, res) => {
  CRUD Restaurant
  ************/
 
-app.get('/restaurants', (req, res) => {
+app.get('/restaurants', async (req, res) => {
+  try {
+    const restaurants = await Restaurant.find();
+
+    res.json(restaurants);
+  } catch (err) {
+    console.log(err);
+    res.json({
+      errorMessage: 'Sorry Dude try Mc Donald',
+    });
+  }
   res.json('route get resto');
 });
 
