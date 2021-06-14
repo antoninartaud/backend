@@ -5,6 +5,10 @@ const path = require('path');
 const multer = require('multer');
 
 const upload = multer({ dest: 'public/uploads/' });
+console.log('upload:', upload);
+
+const uploadSingle = upload.single('image');
+console.log('upload.single:', uploadSingle);
 
 const port = 8000;
 
@@ -14,9 +18,15 @@ app.use(cors());
 
 app.use(express.static('public'));
 
+app.get('/', (req, res) => {
+  res.send('i"m in route / !!');
+});
+
 app.post('/upload', upload.single('image'), (req, res) => {
   console.log('req.body', req.body);
   console.log('req.file', req.file);
+
+  console.log(object);
 
   fs.renameSync(
     req.file.path,
@@ -25,10 +35,6 @@ app.post('/upload', upload.single('image'), (req, res) => {
 
   res.send('ok');
 });
-
-// app.get('/', (req, res) => {
-//   res.send('i"m in route / !!');
-// });
 
 app.listen(8000, () => {
   console.log(`App listening on port ${port}!`);
