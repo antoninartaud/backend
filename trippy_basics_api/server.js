@@ -27,6 +27,9 @@ app.get('/', (req, res) => {
   res.json('You talking to me ?');
 });
 
+// console.log(mongoose);
+// console.log(Restaurant);
+// console.log(Hotel);
 /*********** 
 CRUD Hotel
 ************/
