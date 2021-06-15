@@ -21,7 +21,7 @@ app.use(express.json());
 app.get('/users', async (req, res) => {
   // res.send('On the route / my friend !');
   try {
-    const users = await User.find();
+    const users = await userModel.find();
 
     res.json(users);
   } catch {

@@ -5,7 +5,7 @@ const userShema = mongoose.Schema({
   email: String,
   age: Number,
   city: [String],
-  date: { type: Date, default: date.now },
+  date: { type: Date, default: Date.now },
 });
 
 const User = mongoose.model('User', userShema);
