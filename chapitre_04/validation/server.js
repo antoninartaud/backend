@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const userModel = require('./models/user');
 const { testRoute } = require('./middlewares/testRoute');
 const { usersRoutes } = require('./routes/usersRoutes');
-// const expressValidator = require('express-validator');
+const expressValidator = require('express-validator');
 
 mongoose.connect('mongodb://localhost:27017/validation', (err) => {
   if (err) {
