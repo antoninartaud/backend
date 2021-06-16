@@ -4,7 +4,7 @@ const userShema = mongoose.Schema({
   userName: { type: String, unique: true },
   email: String,
   age: Number,
-  city: [String],
+  city: String,
   date: { type: Date, default: Date.now },
 });
 

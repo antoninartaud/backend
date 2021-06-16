@@ -6,6 +6,10 @@ const {
   sendUserInfosByName,
   sendUserInfosByEmail,
 } = require('../controllers/usersController');
+const { userValidationRules } = require('../middlewares/validator');
+const { validate } = require('../controllers/validatorController');
+
+router.post('/signup', userValidationRules, validate);
 
 router.get('/', sendUsers);
 
