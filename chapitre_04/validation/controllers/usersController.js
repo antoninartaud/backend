@@ -16,6 +16,17 @@ const sendUsers = async (req, res) => {
   }
 };
 
+// const addUser = async (req, res) => {
+//   try {
+//     const user = await userModel.create
+//   } catch (error) {
+//     console.log(error);
+//     res.json({
+//       errorMessage: 'Sorry Dude error add user',
+//     });
+//   }
+// }
+
 module.exports = {
   sendUsers,
 };

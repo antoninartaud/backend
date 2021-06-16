@@ -15,7 +15,7 @@ mongoose.connect('mongodb://localhost:27017/validation', (err) => {
 });
 
 const app = express();
-const port = 8000;
+const port = 8002;
 
 app.use(cors());
 
