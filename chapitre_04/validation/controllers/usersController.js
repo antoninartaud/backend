@@ -33,27 +33,30 @@ const addUser = async (req, res) => {
   }
 };
 
-// const sendUserInfosByName = async (req, res) => {
-//   try {
-//     // const userInfosByName = await userModel.find();
+const sendUserInfosByName = async (req, res) => {
+  try {
+    console.log('req.params.username', req.params.username);
+    const userName = req.params.username;
+    const filter = { userName: userName };
+    const userInfos = await userModel.findOne(filter);
 
-//     res.json({
-//       message: 'This is the sendUserInfosByName Jeff',
-//       userInfosByName,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.json({
-//       message: 'Sorry Dude error add user',
-//     });
-//   }
-// };
+    res.json({
+      message: 'This is the sendUserInfosByName Jeff',
+      userInfos,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Sorry Dude error sendUserInfosByName',
+    });
+  }
+};
 
 // const sendUserInfosByEmail;
 
 module.exports = {
   sendUsers,
   addUser,
-  // sendUserInfosByName,
+  sendUserInfosByName,
   // sendUserInfosByEmail,
 };
