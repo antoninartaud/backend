@@ -1,4 +1,5 @@
-const userModel = require('../models/user');
+const userModel = require('../models/userModel');
+const expressValidator = require('express-validator');
 
 const sendUsers = async (req, res) => {
   try {
@@ -18,17 +19,17 @@ const sendUsers = async (req, res) => {
 
 const addUser = async (req, res) => {
   try {
-    // const userAdded = await userModel.insertOne();
+    const errors = expressValidator.validationResult(req);
 
-    res.json({
-      message: 'This is the users list Jeff',
-      userAdded,
-    });
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+    } else {
+      const userAdded = await userModel.create(req.body);
+
+      res.json({ message: 'The user was added, Jeff', userAdded });
+    }
   } catch (error) {
-    console.log(error);
-    res.json({
-      message: 'Sorry Dude error add user'
-    })
+    res.status(500).json({ message: 'Sorry Dude error add user', error });
   }
 };
 
@@ -43,17 +44,16 @@ const sendUserInfosByName = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.json({
-      message: 'Sorry Dude error add user'
-    })
+      message: 'Sorry Dude error add user',
+    });
   }
-};;
+};
 
-const sendUserInfosByEmail;
-
+// const sendUserInfosByEmail;
 
 module.exports = {
   sendUsers,
   addUser,
   sendUserInfosByName,
-  sendUserInfosByEmail
+  // sendUserInfosByEmail,
 };

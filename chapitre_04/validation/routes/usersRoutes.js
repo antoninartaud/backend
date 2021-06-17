@@ -6,14 +6,11 @@ const {
   sendUserInfosByName,
   sendUserInfosByEmail,
 } = require('../controllers/usersController');
-const { userValidationRules } = require('../middlewares/validator');
-const { validate } = require('../controllers/validatorController');
-
-router.post('/signup', userValidationRules, validate);
+const { userValidationRules } = require('../middlewares/validationMiddlewares');
 
 router.get('/', sendUsers);
 
-router.post('/users/add', addUser);
+router.post('/users/add', userValidationRules, addUser);
 
 router.get('/users/:username', sendUserInfosByName);
 
