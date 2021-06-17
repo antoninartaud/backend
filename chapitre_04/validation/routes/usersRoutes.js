@@ -12,7 +12,7 @@ router.get('/', sendUsers);
 
 router.post('/add', userValidationRules, addUser);
 
-router.get('/users/:username', sendUserInfosByName);
+router.get('/:username', sendUserInfosByName);
 
 // router.get('/users/:email', sendUserInfosByEmail);
 
