@@ -4,7 +4,7 @@ const {
   sendUsers,
   addUser,
   sendUserInfosByName,
-  sendUserInfosByEmail,
+  sendUserInfosById,
 } = require('../controllers/usersController');
 const { userValidationRules } = require('../middlewares/validationMiddlewares');
 
@@ -14,7 +14,7 @@ router.post('/add', userValidationRules, addUser);
 
 router.get('/:username', sendUserInfosByName);
 
-// router.get('/users/:email', sendUserInfosByEmail);
+router.get('/:id', sendUserInfosById);
 
 router.all('*', (req, res) => {
   res.status(404).json({
