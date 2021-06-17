@@ -10,11 +10,11 @@ const { userValidationRules } = require('../middlewares/validationMiddlewares');
 
 router.get('/', sendUsers);
 
-router.post('/users/add', userValidationRules, addUser);
+router.post('/add', userValidationRules, addUser);
 
-router.get('/users/:username', sendUserInfosByName);
+// router.get('/users/:username', sendUserInfosByName);
 
-router.get('/users/:email', sendUserInfosByEmail);
+// router.get('/users/:email', sendUserInfosByEmail);
 
 router.all('*', (req, res) => {
   res.status(404).json({

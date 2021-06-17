@@ -3,16 +3,16 @@ const expressValidator = require('express-validator');
 
 const sendUsers = async (req, res) => {
   try {
-    const users = await userModel.find();
+    const usersList = await userModel.find();
 
     res.json({
-      message: 'This is the users list Jeff',
-      users,
+      message: 'This is the usersList list Jeff',
+      usersList,
     });
   } catch (error) {
     console.log(error);
     res.json({
-      errorMessage: 'Sorry Dude error find users',
+      errorMessage: 'Sorry Dude error find usersList',
     });
   }
 };
@@ -33,27 +33,27 @@ const addUser = async (req, res) => {
   }
 };
 
-const sendUserInfosByName = async (req, res) => {
-  try {
-    // const userInfosByName = await userModel.find();
+// const sendUserInfosByName = async (req, res) => {
+//   try {
+//     // const userInfosByName = await userModel.find();
 
-    res.json({
-      message: 'This is the sendUserInfosByName Jeff',
-      userInfosByName,
-    });
-  } catch (error) {
-    console.log(error);
-    res.json({
-      message: 'Sorry Dude error add user',
-    });
-  }
-};
+//     res.json({
+//       message: 'This is the sendUserInfosByName Jeff',
+//       userInfosByName,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.json({
+//       message: 'Sorry Dude error add user',
+//     });
+//   }
+// };
 
 // const sendUserInfosByEmail;
 
 module.exports = {
   sendUsers,
   addUser,
-  sendUserInfosByName,
+  // sendUserInfosByName,
   // sendUserInfosByEmail,
 };
