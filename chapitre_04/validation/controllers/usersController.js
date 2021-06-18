@@ -1,6 +1,5 @@
 const userModel = require('../models/userModel');
 const expressValidator = require('express-validator');
-const { request } = require('express');
 
 const sendUsers = async (req, res) => {
   try {
@@ -54,6 +53,25 @@ const sendUserInfosByName = async (req, res) => {
   }
 };
 
+const sendUserInfosByEmail = async (req, res) => {
+  try {
+    // console.log('req.params.email', req.params.email);
+    const userEmail = req.params.email;
+    const filter = { email: userEmail };
+    const userInfos = await userModel.findOne(filter).lean();
+
+    res.json({
+      message: 'This is the sendUserInfosByEmail Elvis!',
+      userInfos,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Sorry Elvis error sendUserInfosByEmail !',
+    });
+  }
+};
+
 const sendUserInfosById = async (req, res) => {
   try {
     console.log('req.params.id', req.params.id);
@@ -78,4 +96,5 @@ module.exports = {
   addUser,
   sendUserInfosByName,
   sendUserInfosById,
+  sendUserInfosByEmail,
 };
