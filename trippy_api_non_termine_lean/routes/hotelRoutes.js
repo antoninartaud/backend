@@ -1,12 +1,19 @@
-const express = require("express")
-const router = express.Router()
-const { getHotels, getHotel, addHotel } = require("../controllers/hotelControllers")
-const { validationHotels } = require("../middlewares/validationsMiddlewares")
+const express = require('express');
+const router = express.Router();
+const {
+  getHotels,
+  getHotel,
+  addHotel,
+  updateHotelName,
+} = require('../controllers/hotelControllers');
+const { validationHotels } = require('../middlewares/validationsMiddlewares');
 
-router.get("/", getHotels)
+router.get('/', getHotels);
 
-router.get("/:id", getHotel)
+router.get('/:id', getHotel);
 
-router.post("/", validationHotels, addHotel)
+router.post('/', validationHotels, addHotel);
 
-module.exports = router
+router.patch('/:id', updateHotelName);
+
+module.exports = router;
