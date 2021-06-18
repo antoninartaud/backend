@@ -1,5 +1,6 @@
 const userModel = require('../models/userModel');
 const expressValidator = require('express-validator');
+const { request } = require('express');
 
 const sendUsers = async (req, res) => {
   try {
@@ -34,6 +35,7 @@ const addUser = async (req, res) => {
 };
 
 const sendUserInfosByName = async (req, res) => {
+  console.log(req);
   try {
     // console.log('req.params.username', req.params.username);
     const username = req.params.username;
@@ -58,8 +60,9 @@ const sendUserInfosById = async (req, res) => {
     const userId = req.params.id;
     const userInfos = await userModel.findById(userId).lean();
 
+    // res.send('hello from sendUserInfosById');
     res.json({
-      message: 'This is the sendUserInfosById Jeff',
+      message: 'This is the sendUserInfosById Jeff!',
       userInfos,
     });
   } catch (error) {

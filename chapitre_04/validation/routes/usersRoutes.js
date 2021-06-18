@@ -12,9 +12,9 @@ router.get('/', sendUsers);
 
 router.post('/add', userValidationRules, addUser);
 
-router.get('/:username', sendUserInfosByName);
-
 router.get('/:id', sendUserInfosById);
+
+router.get('/username/:username', sendUserInfosByName);
 
 router.all('*', (req, res) => {
   res.status(404).json({
@@ -25,3 +25,5 @@ router.all('*', (req, res) => {
 module.exports = {
   usersRoutes: router,
 };
+
+// /[[:alnum:]]{24}/
