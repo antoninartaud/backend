@@ -65,7 +65,7 @@ const deleteHotel = async (req, res) => {
   try {
     const idHotel = req.params.id;
     console.log(idHotel);
-    const hotelDeleted = await hotelModel.deleteOne(idHotel);
+    const hotelDeleted = await hotelModel.findOneAndDelete({ _id: idHotel });
 
     res.json({
       hotelDeleted,
