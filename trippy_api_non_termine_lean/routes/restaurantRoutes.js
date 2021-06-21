@@ -1,11 +1,18 @@
-const express = require("express")
-const router = express.Router()
-const { getRestaurants, getRestaurant, addRestaurant } = require("../controllers/restaurantControllers")
+const express = require('express');
+const router = express.Router();
+const {
+  getRestaurants,
+  getRestaurant,
+  addRestaurant,
+  updateRestaurantName,
+} = require('../controllers/restaurantControllers');
 
-router.get("/", getRestaurants)
+router.get('/', getRestaurants);
 
-router.get("/:id", getRestaurant)
+router.get('/:id', getRestaurant);
 
-router.post("/", addRestaurant)
+router.post('/', addRestaurant);
 
-module.exports = router
+router.patch('/:id', updateRestaurantName);
+
+module.exports = router;
