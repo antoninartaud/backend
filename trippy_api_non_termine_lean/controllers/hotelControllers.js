@@ -48,11 +48,28 @@ const updateHotelName = async (req, res) => {
 
     await hotelModel.updateOne({ name: hotelName }, { name: newHotelName });
 
-    const hotelNameUpdated = await hotelModel.findOne({ name: newHotelName });
+    const hotelNameUpdated = await hotelModel
+      .findOne({ name: newHotelName })
+      .lean();
 
     res.json({
       message: 'my new name is great !',
       hotelNameUpdated,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'There was a problem', error });
+  }
+};
+
+const deleteHotel = async (req, res) => {
+  try {
+    const idHotel = req.params.id;
+    console.log(idHotel);
+    const hotelDeleted = await hotelModel.deleteOne(idHotel);
+
+    res.json({
+      hotelDeleted,
+      message: "I've seen so many things...aaahh..Bye, Bye, World...-(",
     });
   } catch (error) {
     res.status(500).json({ message: 'There was a problem', error });
@@ -64,4 +81,5 @@ module.exports = {
   getHotel,
   addHotel,
   updateHotelName,
+  deleteHotel,
 };
