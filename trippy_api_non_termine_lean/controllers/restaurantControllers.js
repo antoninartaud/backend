@@ -64,9 +64,29 @@ const updateRestaurantName = async (req, res) => {
   }
 };
 
+const deleteRestaurant = async (req, res) => {
+  try {
+    const idRestaurant = req.params.id;
+    console.log(idRestaurant);
+
+    const hotelDeleted = await restaurantModel.findOneAndDelete({
+      _id: idRestaurant,
+    });
+    // console.log('hotelDeleted', hotelDeleted);
+
+    res.json({
+      message: "I've seen so many things...aaahh..Bye, Bye, World...-(",
+      hotelDeleted,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'There was a problem', error });
+  }
+};
+
 module.exports = {
   getRestaurants,
   getRestaurant,
   addRestaurant,
   updateRestaurantName,
+  deleteRestaurant,
 };
