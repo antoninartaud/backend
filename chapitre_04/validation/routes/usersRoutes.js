@@ -13,9 +13,9 @@ router.get('/', sendUsers);
 
 router.post('/add', userValidationRules, addUser);
 
-router.get('/:id', sendUserInfosById);
+router.get('/:id([[:alnum:]]{24})', sendUserInfosById);
 
-router.get('/username/:username', sendUserInfosByName);
+router.get('/:username', sendUserInfosByName);
 
 router.get('/email/:email', sendUserInfosByEmail);
 

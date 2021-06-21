@@ -40,7 +40,20 @@ const addHotel = async (req, res) => {
 
 const updateHotelName = async (req, res) => {
   try {
-    res.json();
+    const hotelName = req.params.id;
+    // console.log('hotelName:', hotelName);
+
+    const newHotelName = req.query.name;
+    // console.log('newHotelName', newHotelName);
+
+    await hotelModel.updateOne({ name: hotelName }, { name: newHotelName });
+
+    const hotelNameUpdated = await hotelModel.findOne({ name: newHotelName });
+
+    res.json({
+      message: 'my new name is great !',
+      hotelNameUpdated,
+    });
   } catch (error) {
     res.status(500).json({ message: 'There was a problem', error });
   }
