@@ -1,9 +1,10 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const { mongoURL } = require('./config');
 
 mongoose.connect(
-  'mongodb://localhost:27017/express_login',
+  mongoURL,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
